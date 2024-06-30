@@ -304,7 +304,8 @@ test('\nnegative range tests', function(t) {
     // invalid ranges never satisfied!
     ['blerg', '1.2.3'],
     ['git+https://user:password0123@github.com/foo', '123.0.0', true],
-    ['^1.2.3', '2.0.0-pre']
+    ['^1.2.3', '2.0.0-pre'],
+    ['== 1.0.0 || foo', '2.0.0', { loose: true }]
   ].forEach(function(v) {
     var range = v[0];
     var ver = v[1];
@@ -682,3 +683,13 @@ test('\nmax satisfying', function(t) {
   });
   t.end();
 });
+
+test('long build id', function (t) {
+  var longBuild = '-928490632884417731e7af463c92b034d6a78268fc993bcb88a57944'
+  var shortVersion = '1.1.1'
+  var maxNumber="9007199254740991" // NUMBER.MAX_SAFE_INTEGER isnt part of 0.10.0
+  var longVersion = maxNumber + '.' + maxNumber + '.' + maxNumber
+  t.equal(semver.valid(shortVersion + longBuild), shortVersion + longBuild)
+  t.equal(semver.valid(longVersion + longBuild), longVersion + longBuild)
+  t.end()
+})
